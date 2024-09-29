@@ -14,10 +14,12 @@ namespace KoncApi.Controllers
             return Ok(
                 new
                 {
-                    self = new { href = Url.Link("Root", null) },
+                    self = new { href = Url.Link("Root", null),
+                                 description = "Wellcome to KoncApi."},
                     entity,
                     _actions = new
                     {
+                        
                         getAll = new
                         {
                             href = Url.Link("GetAllVenues", null),

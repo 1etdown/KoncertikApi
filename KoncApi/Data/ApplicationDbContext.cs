@@ -11,7 +11,7 @@ namespace KoncApi
 
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<Booking> Booking { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         public DbSet<Venue> Venues { get; set; } // Add this line
     }

@@ -12,7 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Добавляем зависимости для сервисов
 builder.Services.AddScoped<IVenueService, VenueService>();
-
+builder.Services.AddScoped<IEventService, EventService>();  // Добавляем сервис для Event
+builder.Services.AddScoped<IUserService, UserService>();    // Добавляем сервис для User
+builder.Services.AddScoped<IBookingService, BookingService>();
 // Добавляем контроллеры и Swagger для документации API
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
