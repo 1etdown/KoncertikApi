@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KoncApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84dff2b07888c434b429e29e37852f9a9e1363d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee88bb2bf6f10d3d4623504096699f6f3d71ad98")]
 [assembly: System.Reflection.AssemblyProductAttribute("KoncApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KoncApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

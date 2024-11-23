@@ -13,12 +13,35 @@ builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IUserService, UserService>();    
 builder.Services.AddScoped<IBookingService, BookingService>();
+
+builder.Services.AddScoped<VenueQuery>();
+builder.Services.AddScoped<VenueMutation>();
+builder.Services.AddScoped<BookingQuery>();
+builder.Services.AddScoped<BookingMutation>();
+builder.Services.AddScoped<EventQuery>();
+builder.Services.AddScoped<EventMutation>();
+builder.Services.AddScoped<UserQuery>();
+builder.Services.AddScoped<UserMutation>();
+builder.Services.AddGraphQLServer()
+    .AddQueryType(d => d.Name("Query"))
+    .AddTypeExtension<VenueQuery>()
+    .AddTypeExtension<EventQuery>()
+    .AddTypeExtension<BookingQuery>()
+    .AddTypeExtension<UserQuery>()
+    .AddMutationType(d => d.Name("Mutation"))  
+    .AddTypeExtension<VenueMutation>()
+    .AddTypeExtension<BookingMutation>()
+    .AddTypeExtension<EventMutation>()
+    .AddTypeExtension<UserMutation>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 
 var app = builder.Build();
+
+
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 dbContext.Database.Migrate();
@@ -30,7 +53,20 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
+// Setup middleware pipeline
 app.UseHttpsRedirection();
+
+// Add UseRouting before UseEndpoints
+app.UseRouting(); // <-- This is the missing part
+
 app.UseAuthorization();
-app.MapControllers();
+
+// UseEndpoints should come after UseRouting
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapGraphQL();
+});
+
 app.Run();
+

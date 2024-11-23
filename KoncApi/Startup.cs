@@ -38,6 +38,11 @@ namespace KoncApi
             {
                 endpoints.MapControllers();
             });
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                SeedData.Initialize(context);
+            }
         }
     }
 }

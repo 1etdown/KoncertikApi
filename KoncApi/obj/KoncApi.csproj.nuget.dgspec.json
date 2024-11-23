@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[7.8.0, )"
             },
+            "HotChocolate.AspNetCore": {
+              "target": "Package",
+              "version": "[14.1.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.3, )"
