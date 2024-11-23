@@ -9,12 +9,13 @@ namespace KoncApi
         [Key]
         public Guid Id { get; set; }
         public Guid BookingId { get; set; }
+        
         [ForeignKey("BookingId")]
         public Booking Booking { get; set; }
         public required string EventName { get; set; }
 
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTimeOffset  StartTime { get; set; }
+        public DateTimeOffset  EndTime { get; set; }
         public int TicketsAvailable { get; set; }
     }
 }

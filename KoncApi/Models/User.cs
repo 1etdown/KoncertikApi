@@ -13,7 +13,7 @@ namespace KoncApi
 
         public required string Surname { get; set; }
 
-        public int PhoneNumber { get; set; }
+        public long PhoneNumber { get; set; }
 
         public required string Email { get; set; }
 

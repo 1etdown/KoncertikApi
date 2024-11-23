@@ -6,6 +6,6 @@ namespace KoncApi;
         public Guid Id { get; set; }
         public Guid VenueId { get; set; }
         public Guid UserId { get; set; }
-        public DateTime BookingDate { get; set; }
+        public DateTimeOffset BookingDate { get; set; }
         public BookingStatus Status { get; set; }
     }

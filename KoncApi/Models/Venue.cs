@@ -14,8 +14,7 @@ namespace KoncApi
         public required string Location { get; set; }
 
         public int Capacity { get; set; }
-
-        public required List<DateTime> AvailableDates { get; set; }
+        
 
         public ICollection<Booking> Bookings { get; set; }
     }

@@ -47,7 +47,7 @@ public class VenueController : ControllerBase
             Name = venueCreateDto.Name,
             Location = venueCreateDto.Location,
             Capacity = venueCreateDto.Capacity,
-            AvailableDates = venueCreateDto.AvailableDates
+
         };
 
         _venueService.AddVenue(venueCreateDto);

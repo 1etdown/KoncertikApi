@@ -23,7 +23,7 @@ namespace KoncApi{
                     Name = v.Name,
                     Location = v.Location,
                     Capacity = v.Capacity,
-                    AvailableDates = v.AvailableDates
+               
                 })
                 .ToList();
         }
@@ -40,7 +40,7 @@ namespace KoncApi{
                 Name = venue.Name,
                 Location = venue.Location,
                 Capacity = venue.Capacity,
-                AvailableDates = venue.AvailableDates
+       
             };
         }
 
@@ -52,7 +52,7 @@ namespace KoncApi{
                 Name = venueCreateDto.Name,
                 Location = venueCreateDto.Location,
                 Capacity = venueCreateDto.Capacity,
-                AvailableDates = venueCreateDto.AvailableDates
+           
             };
 
             _context.Venues.Add(venue);
@@ -67,7 +67,7 @@ namespace KoncApi{
             venue.Name = venueUpdateDto.Name;
             venue.Location = venueUpdateDto.Location;
             venue.Capacity = venueUpdateDto.Capacity;
-            venue.AvailableDates = venueUpdateDto.AvailableDates;
+ 
 
             _context.SaveChanges();
         }

@@ -20,7 +20,7 @@ namespace KoncApi
     services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
 
-    // Other service registrations
+   
     services.AddScoped<IVenueService, VenueService>();
     services.AddControllers();
 }

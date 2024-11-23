@@ -17,8 +17,7 @@ namespace KoncApi
         public Guid UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-        public DateTime BookingDate { get; set; }
+        public DateTimeOffset  BookingDate { get; set; }
         public BookingStatus Status { get; set; }
         public ICollection<Event> Events { get; set; }
     }

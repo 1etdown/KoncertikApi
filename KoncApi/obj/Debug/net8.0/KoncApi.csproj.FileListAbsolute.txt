@@ -104,3 +104,5 @@ C:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\obj\Debug\net8.0\KoncApi.pdb
 C:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\obj\Debug\net8.0\KoncApi.genruntimeconfig.cache
 C:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\obj\Debug\net8.0\ref\KoncApi.dll
 C:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\obj\Debug\net8.0\KoncApi.sourcelink.json
+c:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\bin\Debug\net8.0\EasyNetQ.dll
+c:\Users\FadEw\Desktop\СОП\KoncertikApi\KoncApi\bin\Debug\net8.0\RabbitMQ.Client.dll

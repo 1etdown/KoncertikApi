@@ -1,18 +1,19 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj": {}
+    "C:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj": {}
   },
   "projects": {
-    "c:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj": {
+    "C:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj",
+        "projectUniqueName": "C:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj",
         "projectName": "KoncApi",
-        "projectPath": "c:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj",
+        "projectPath": "C:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\KoncApi.csproj",
         "packagesPath": "C:\\Users\\FadEw\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\obj\\",
+        "outputPath": "C:\\Users\\FadEw\\Desktop\\СОП\\KoncertikApi\\KoncApi\\obj\\",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "C:\\Users\\FadEw\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -45,6 +46,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EasyNetQ": {
+              "target": "Package",
+              "version": "[7.8.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.3, )"
@@ -71,7 +76,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [
