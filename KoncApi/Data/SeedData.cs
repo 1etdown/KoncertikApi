@@ -9,13 +9,11 @@ namespace KoncApi
     {
         public static void Initialize(ApplicationDbContext context)
         {
-            // Проверяем, есть ли уже данные в базе
             if (context.Users.Any() || context.Venues.Any() || context.Bookings.Any() || context.Events.Any())
             {
-                return;   // База данных уже содержит данные
+                return;
             }
 
-            // Создание пользователей
             var users = new List<User>
             {
                 new User
@@ -36,11 +34,9 @@ namespace KoncApi
                 }
             };
 
-            // Добавление пользователей в контекст
             context.Users.AddRange(users);
             context.SaveChanges();
 
-            // Создание мест
             var venues = new List<Venue>
             {
                 new Venue
@@ -59,11 +55,9 @@ namespace KoncApi
                 }
             };
 
-            // Добавление мест в контекст
             context.Venues.AddRange(venues);
             context.SaveChanges();
 
-            // Создание бронирований
             var bookings = new List<Booking>
             {
                 new Booking
@@ -71,7 +65,7 @@ namespace KoncApi
                     Id = Guid.NewGuid(),
                     VenueId = venues[0].Id,
                     UserId = users[0].Id,
-                    BookingDate = DateTimeOffset.Now,
+                    BookingDate = DateTimeOffset.Now.ToUniversalTime(),
                     Status = BookingStatus.Confirmed
                 },
                 new Booking
@@ -79,16 +73,14 @@ namespace KoncApi
                     Id = Guid.NewGuid(),
                     VenueId = venues[1].Id,
                     UserId = users[1].Id,
-                    BookingDate = DateTimeOffset.Now,
+                    BookingDate = DateTimeOffset.Now.ToUniversalTime(),
                     Status = BookingStatus.Pending
                 }
             };
 
-            // Добавление бронирований в контекст
             context.Bookings.AddRange(bookings);
             context.SaveChanges();
 
-            // Создание событий
             var events = new List<Event>
             {
                 new Event
@@ -96,8 +88,8 @@ namespace KoncApi
                     Id = Guid.NewGuid(),
                     BookingId = bookings[0].Id,
                     EventName = "Rock Concert",
-                    StartTime = DateTimeOffset.Now.AddHours(2),
-                    EndTime = DateTimeOffset.Now.AddHours(5),
+                    StartTime = DateTimeOffset.Now.AddHours(2).ToUniversalTime(),
+                    EndTime = DateTimeOffset.Now.AddHours(5).ToUniversalTime(),
                     TicketsAvailable = 400
                 },
                 new Event
@@ -105,13 +97,12 @@ namespace KoncApi
                     Id = Guid.NewGuid(),
                     BookingId = bookings[1].Id,
                     EventName = "Jazz Night",
-                    StartTime = DateTimeOffset.Now.AddHours(3),
-                    EndTime = DateTimeOffset.Now.AddHours(6),
+                    StartTime = DateTimeOffset.Now.AddHours(3).ToUniversalTime(),
+                    EndTime = DateTimeOffset.Now.AddHours(6).ToUniversalTime(),
                     TicketsAvailable = 250
                 }
             };
 
-            // Добавление событий в контекст
             context.Events.AddRange(events);
             context.SaveChanges();
         }

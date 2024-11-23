@@ -7,10 +7,12 @@ namespace KoncApi
     public class BookingService : IBookingService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRabbitMqService _rabbitMqService;
 
-        public BookingService(ApplicationDbContext context)
+        public BookingService(ApplicationDbContext context, IRabbitMqService rabbitMqService)
         {
             _context = context;
+            _rabbitMqService = rabbitMqService ?? throw new ArgumentNullException(nameof(rabbitMqService));
         }
 
         public List<BookingReadDto> GetAllBookings()
@@ -45,6 +47,14 @@ namespace KoncApi
 
         public void AddBooking(BookingCreateDto bookingCreateDto)
         {
+            var isVenueAvailable = !_context.Bookings
+                .Any(b => b.VenueId == bookingCreateDto.VenueId && b.BookingDate == bookingCreateDto.BookingDate);
+
+            if (!isVenueAvailable)
+            {
+                throw new InvalidOperationException("Venue is not available on the selected date.");
+            }
+
             var booking = new Booking
             {
                 Id = Guid.NewGuid(),
@@ -54,8 +64,25 @@ namespace KoncApi
                 Status = bookingCreateDto.Status
             };
 
+            var venue = _context.Venues.Find(bookingCreateDto.VenueId);
+            if (venue == null)
+            {
+                throw new InvalidOperationException("Venue not found.");
+            }
+
             _context.Bookings.Add(booking);
             _context.SaveChanges();
+
+            // Send booking information and venue name to RabbitMQ
+            _rabbitMqService.SendMessage(new
+            {
+                booking.Id,
+                booking.VenueId,
+                booking.UserId,
+                booking.BookingDate,
+                Status = booking.Status.ToString(),
+                VenueName = venue.Name
+            });
         }
 
         public void UpdateBooking(Guid id, BookingUpdateDto bookingUpdateDto)

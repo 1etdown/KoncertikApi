@@ -8,7 +8,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-
 builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IUserService, UserService>();    
@@ -41,11 +40,16 @@ builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 
 var app = builder.Build();
 
-
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-dbContext.Database.Migrate();
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+    SeedData.Initialize(dbContext); // Вызов метода инициализации данных
+}
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -55,13 +59,9 @@ app.UseSwaggerUI(c =>
 
 // Setup middleware pipeline
 app.UseHttpsRedirection();
-
-// Add UseRouting before UseEndpoints
-app.UseRouting(); // <-- This is the missing part
-
+app.UseRouting();
 app.UseAuthorization();
 
-// UseEndpoints should come after UseRouting
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -69,4 +69,3 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
