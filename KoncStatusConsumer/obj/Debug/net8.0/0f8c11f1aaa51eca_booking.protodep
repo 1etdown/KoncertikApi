@@ -1,0 +1,4 @@
+obj\Debug\net8.0/Booking.cs \
+obj\Debug\net8.0/BookingGrpc.cs: C:/Users/FadEw/.nuget/packages/grpc.tools/2.68.1/build/native/include/google/protobuf/empty.proto\
+ C:/Users/FadEw/.nuget/packages/grpc.tools/2.68.1/build/native/include/google/protobuf/timestamp.proto\
+ ../KoncStatusServer/Protos/booking.proto

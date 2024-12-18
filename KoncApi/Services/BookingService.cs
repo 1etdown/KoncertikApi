@@ -47,13 +47,7 @@ namespace KoncApi
 
         public void AddBooking(BookingCreateDto bookingCreateDto)
         {
-            var isVenueAvailable = !_context.Bookings
-                .Any(b => b.VenueId == bookingCreateDto.VenueId && b.BookingDate == bookingCreateDto.BookingDate);
-
-            if (!isVenueAvailable)
-            {
-                throw new InvalidOperationException("Venue is not available on the selected date.");
-            }
+         
 
             var booking = new Booking
             {
@@ -73,7 +67,6 @@ namespace KoncApi
             _context.Bookings.Add(booking);
             _context.SaveChanges();
 
-            // Send booking information and venue name to RabbitMQ
             _rabbitMqService.SendMessage(new
             {
                 booking.Id,

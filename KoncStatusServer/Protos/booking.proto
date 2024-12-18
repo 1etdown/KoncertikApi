@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service BookingStatus {
+  rpc AddBooking (BookingInfoMessage) returns (BookingInfoMessage);
+  rpc GetBookingById (BookingIdRequest) returns (BookingInfoMessage);
+}
+
+message BookingInfoMessage {
+  string id = 1;
+  string venue_id = 2;
+  string user_id = 3;
+  google.protobuf.Timestamp booking_date = 4;
+  string status = 5;
+  string venue_name = 6;
+}
+
+message BookingIdRequest {
+  string id = 1;
+}

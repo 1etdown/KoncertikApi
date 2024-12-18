@@ -18,7 +18,7 @@ namespace KoncApi
             {
                 new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                     Name = "John",
                     Surname = "Doe",
                     PhoneNumber = 1234567890,
@@ -26,7 +26,7 @@ namespace KoncApi
                 },
                 new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     Name = "Jane",
                     Surname = "Smith",
                     PhoneNumber = 9876543210,
@@ -41,14 +41,14 @@ namespace KoncApi
             {
                 new Venue
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                     Name = "Concert Hall A",
                     Location = "New York",
                     Capacity = 500
                 },
                 new Venue
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
                     Name = "Concert Hall B",
                     Location = "Los Angeles",
                     Capacity = 300
@@ -62,7 +62,7 @@ namespace KoncApi
             {
                 new Booking
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("55555555-5555-5555-5555-555555555555"),
                     VenueId = venues[0].Id,
                     UserId = users[0].Id,
                     BookingDate = DateTimeOffset.Now.ToUniversalTime(),
@@ -70,7 +70,7 @@ namespace KoncApi
                 },
                 new Booking
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("66666666-6666-6666-6666-666666666666"),
                     VenueId = venues[1].Id,
                     UserId = users[1].Id,
                     BookingDate = DateTimeOffset.Now.ToUniversalTime(),
@@ -85,7 +85,7 @@ namespace KoncApi
             {
                 new Event
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("77777777-7777-7777-7777-777777777777"),
                     BookingId = bookings[0].Id,
                     EventName = "Rock Concert",
                     StartTime = DateTimeOffset.Now.AddHours(2).ToUniversalTime(),
@@ -94,7 +94,7 @@ namespace KoncApi
                 },
                 new Event
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("88888888-8888-8888-8888-888888888888"),
                     BookingId = bookings[1].Id,
                     EventName = "Jazz Night",
                     StartTime = DateTimeOffset.Now.AddHours(3).ToUniversalTime(),
