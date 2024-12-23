@@ -1,11 +1,39 @@
 {
   "Version": 1,
-  "Hash": "ilXiJP65CyRCAcF7TREOHJRAHg7l/kZq8IMPHcLqslk=",
+  "Hash": "mA7tnUE5w06Tc8z4Q1Jk1LewmcOIPf3+c5G6AdlFvuM=",
   "Source": "KoncApi",
   "BasePath": "_content/KoncApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "KoncApi\\wwwroot",
+      "Source": "KoncApi",
+      "ContentRoot": "C:\\Users\\FadEw\\Desktop\\SOP\\KoncertikApi\\KoncApi\\wwwroot\\",
+      "BasePath": "_content/KoncApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\FadEw\\Desktop\\SOP\\KoncertikApi\\KoncApi\\wwwroot\\index.html",
+      "SourceId": "KoncApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\FadEw\\Desktop\\SOP\\KoncertikApi\\KoncApi\\wwwroot\\",
+      "BasePath": "_content/KoncApi",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    }
+  ]
 }

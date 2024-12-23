@@ -302,3 +302,4 @@ C:\Users\FadEw\Desktop\SOP\KoncertikApi\KoncApi\obj\Debug\net8.0\refint\KoncApi.
 C:\Users\FadEw\Desktop\SOP\KoncertikApi\KoncApi\obj\Debug\net8.0\KoncApi.pdb
 C:\Users\FadEw\Desktop\SOP\KoncertikApi\KoncApi\obj\Debug\net8.0\KoncApi.genruntimeconfig.cache
 C:\Users\FadEw\Desktop\SOP\KoncertikApi\KoncApi\obj\Debug\net8.0\ref\KoncApi.dll
+C:\Users\FadEw\Desktop\SOP\KoncertikApi\KoncApi\bin\Debug\net8.0\KoncApi.staticwebassets.runtime.json

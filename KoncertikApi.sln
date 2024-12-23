@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoncStatusServer", "KoncSta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoncStatusConsumer", "KoncStatusConsumer\KoncStatusConsumer.csproj", "{7C686EFB-0C96-4187-8789-293D6F11F13F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoncNotify", "KoncNotify\KoncNotify.csproj", "{E255821C-B908-46D1-A195-FA3C93190DC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{7C686EFB-0C96-4187-8789-293D6F11F13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C686EFB-0C96-4187-8789-293D6F11F13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C686EFB-0C96-4187-8789-293D6F11F13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E255821C-B908-46D1-A195-FA3C93190DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E255821C-B908-46D1-A195-FA3C93190DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E255821C-B908-46D1-A195-FA3C93190DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E255821C-B908-46D1-A195-FA3C93190DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
