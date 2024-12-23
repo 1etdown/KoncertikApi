@@ -1,6 +1,7 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,56 +22,94 @@ namespace KoncStatusConsumer
             using var context = new BookingContext();
             context.Database.Migrate();
 
+            if (args.Length > 0 && args[0].ToLower() == "clear")
+            {
+                await ClearDatabase(context);
+                Console.WriteLine("[Consumer] All records cleared from the database.");
+                return;
+            }
+
             var factory = new ConnectionFactory() { HostName = rabbitMqHost };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
-            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            Console.WriteLine("Connected to RabbitMQ");
+            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false,
+                arguments: null);
+            Console.WriteLine("[Consumer] Connected to RabbitMQ");
 
             using var grpcChannel = GrpcChannel.ForAddress(grpcServerAddress);
             var grpcClient = new BookingStatus.BookingStatusClient(grpcChannel);
-            Console.WriteLine("Connected to gRPC Server");
+            Console.WriteLine("[Consumer] Connected to gRPC Server");
 
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($"[RabbitMQ] Received: {message}");
+                Console.WriteLine($"[RabbitMQ] Received message: {message}");
 
                 try
                 {
-                    // Deserialize and save to local DB
-                    var bookingInfo = JsonSerializer.Deserialize<Booking>(message);
-                    context.Bookings.Add(bookingInfo);
-                    await context.SaveChangesAsync();
-                    Console.WriteLine($"[Database] Booking saved locally: ID={bookingInfo.Id}");
+                    var receivedBooking = JsonSerializer.Deserialize<Booking>(message);
+                    Console.WriteLine(
+                        $"[Consumer] Deserialized booking: ID={receivedBooking.Id}, Status={receivedBooking.Status}");
 
-                    // Send to gRPC Server
-                    var grpcBookingInfo = new BookingInfoMessage
+                    // Сохраняем новое бронирование в локальную БД
+                    context.Bookings.Add(receivedBooking);
+                    await context.SaveChangesAsync();
+                    Console.WriteLine($"[Consumer] Booking saved to local DB: ID={receivedBooking.Id}");
+
+                    // Опрашиваем сервер для всех заявок этого дня, чтобы привести статусы в соответствие
+                    var localBookingsForDay = context.Bookings
+                        .Where(b => b.BookingDate.Date == receivedBooking.BookingDate.Date)
+                        .ToList();
+
+                    foreach (var localBooking in localBookingsForDay)
                     {
-                        Id = bookingInfo.Id,
-                        VenueId = bookingInfo.VenueId,
-                        UserId = bookingInfo.UserId,
-                        BookingDate = Timestamp.FromDateTime(bookingInfo.BookingDate.ToUniversalTime()),
-                        Status = bookingInfo.Status,
-                        VenueName = bookingInfo.VenueName
-                    };
+                        // Отправляем каждую заявку на сервер, чтобы там проставили нужный статус
+                        var grpcBookingInfo = new BookingInfoMessage
+                        {
+                            Id = localBooking.Id,
+                            VenueId = localBooking.VenueId,
+                            UserId = localBooking.UserId,
+                            BookingDate = Timestamp.FromDateTime(localBooking.BookingDate.ToUniversalTime()),
+                            Status = localBooking.Status,
+                            VenueName = localBooking.VenueName
+                        };
 
-                    var updatedBooking = await grpcClient.AddBookingAsync(grpcBookingInfo);
+                        var updatedBooking = await grpcClient.AddBookingAsync(grpcBookingInfo);
+                        Console.WriteLine(
+                            $"[Consumer] Updated booking status from gRPC: ID={updatedBooking.Id}, Status={updatedBooking.Status}");
 
-                    // Get updated status from gRPC
-                    var newStatus = updatedBooking.Status;
+                        // Обновляем локальную БД с учётом ответа сервера
+                        localBooking.Status = updatedBooking.Status;
+                        context.Bookings.Update(localBooking);
+                    }
 
-                    // Update local DB with new status
-                    bookingInfo.Status = newStatus;
-                    context.Bookings.Update(bookingInfo);
+                    // Если есть заявка со статусом “Confirmed”, дополнительно проверяем статусы других заявок
+                    if (receivedBooking.Status == "Confirmed")
+                    {
+                        foreach (var localBooking in localBookingsForDay)
+                        {
+                            // Считываем реальный статус с сервера
+                            var bookingResponse = await grpcClient.GetBookingByIdAsync(
+                                new BookingIdRequest { Id = localBooking.Id }
+                            );
+
+                            localBooking.Status = bookingResponse.Status;
+                            context.Bookings.Update(localBooking);
+                            Console.WriteLine(
+                                $"[Consumer] Verified updated status from gRPC: ID={localBooking.Id}, " +
+                                $"Status={localBooking.Status}"
+                            );
+                        }
+                    }
+
                     await context.SaveChangesAsync();
-                    Console.WriteLine($"[Database] Booking updated locally: ID={bookingInfo.Id}, Status={bookingInfo.Status}");
+                    Console.WriteLine($"[Consumer] Local DB updated for date: {receivedBooking.BookingDate.Date}");
                 }
                 catch (DbUpdateException dbEx)
                 {
-                    Console.WriteLine($"[Error] Database update failed: {dbEx.Message}");
+                    Console.WriteLine($"[Consumer Error] Database update failed: {dbEx.Message}");
                     if (dbEx.InnerException != null)
                     {
                         Console.WriteLine($"[Inner Exception] {dbEx.InnerException.Message}");
@@ -78,15 +117,20 @@ namespace KoncStatusConsumer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[Error] Failed to process message: {ex.Message}");
+                    Console.WriteLine($"[Consumer Error] Message processing failed: {ex.Message}");
                 }
             };
 
             channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-            Console.WriteLine("Waiting for messages... Press [Enter] to exit.");
+            Console.WriteLine("[Consumer] Waiting for messages... Press [Enter] to exit.");
             Console.ReadLine();
         }
-        
+
+        private static async Task ClearDatabase(BookingContext context)
+        {
+            context.Bookings.RemoveRange(context.Bookings);
+            await context.SaveChangesAsync();
+        }
     }
 
     public class Booking
@@ -95,10 +139,13 @@ namespace KoncStatusConsumer
         public string Id { get; set; }
         public string VenueId { get; set; }
         public string UserId { get; set; }
-        public DateTime BookingDate   {
+
+        public DateTime BookingDate
+        {
             get => _bookingDate;
             set => _bookingDate = DateTime.SpecifyKind(value, DateTimeKind.Utc);
         }
+
         public string Status { get; set; }
         public string VenueName { get; set; }
     }
@@ -109,10 +156,10 @@ namespace KoncStatusConsumer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // Подставьте свою реальную строку подключения:
             optionsBuilder.UseNpgsql("Host=localhost;Port=5444;Database=statusdb;Username=pguser;Password=0000");
-
         }
-        
     }
-}
 
+    
+}

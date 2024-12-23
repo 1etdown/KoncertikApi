@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KoncConsumer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eee92ea8f7b7fdcb6a175eaac177d19b170dc08a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74d67929d79f48be31cb9c3bc8d4e3853a50258a")]
 [assembly: System.Reflection.AssemblyProductAttribute("KoncConsumer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KoncConsumer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

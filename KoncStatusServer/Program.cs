@@ -13,40 +13,66 @@ namespace KoncStatusServer
 
         public override Task<BookingInfoMessage> AddBooking(BookingInfoMessage request, ServerCallContext context)
         {
-            Console.WriteLine($"[gRPC] Processing booking: ID={request.Id}, Status={request.Status}");
-
-            var bookingDate = request.BookingDate.ToDateTime().Date;
-
-            if (request.Status == "Confirmed")
+            Console.WriteLine($"[gRPC Server] Received AddBooking request: ID={request.Id}, Status={request.Status}");
+            try
             {
-                foreach (var booking in bookings.Where(b => b.BookingDate.ToDateTime().Date == bookingDate && b.Status != "Confirmed"))
+                var bookingDate = request.BookingDate.ToDateTime().Date;
+
+                // Если новый запрос Confirmed, отменяем все не Confirmed бронирования на ту же дату
+                if (request.Status == "Confirmed")
                 {
-                    booking.Status = "Canceled";
-                    Console.WriteLine($"[Server] Booking {booking.Id} set to 'Canceled'");
+                    foreach (var booking in bookings.Where(b => b.BookingDate.ToDateTime().Date == bookingDate))
+                    {
+                        if (booking.Status != "Confirmed")
+                        {
+                            booking.Status = "Canceled";
+                            Console.WriteLine($"[gRPC Server] Booking {booking.Id} set to 'Canceled'");
+                        }
+                    }
                 }
-            }
 
-            var existingBooking = bookings.FirstOrDefault(b => b.Id == request.Id);
-            if (existingBooking != null)
+                // Удаляем дубликат, если он уже есть в списке
+                var existingBooking = bookings.FirstOrDefault(b => b.Id == request.Id);
+                if (existingBooking != null)
+                {
+                    bookings.Remove(existingBooking);
+                    Console.WriteLine($"[gRPC Server] Removed existing booking with ID={existingBooking.Id}");
+                }
+
+                // Добавляем новое или обновлённое бронирование
+                bookings.Add(request);
+                Console.WriteLine($"[gRPC Server] Added/Updated booking: ID={request.Id}, Status={request.Status}");
+
+                // Находим реальный объект в списке с актуальным статусом и возвращаем его
+                var updatedBooking = bookings.First(b => b.Id == request.Id);
+                return Task.FromResult(updatedBooking);
+            }
+            catch (Exception ex)
             {
-                bookings.Remove(existingBooking);
-                Console.WriteLine($"[Server] Removed existing booking with ID={existingBooking.Id}");
+                Console.WriteLine($"[gRPC Server] Error in AddBooking: {ex.Message}");
+                throw;
             }
-
-            bookings.Add(request);
-            Console.WriteLine($"[Server] Added/Updated booking: ID={request.Id}, Status={request.Status}");
-            return Task.FromResult(request);
         }
 
         public override Task<BookingInfoMessage> GetBookingById(BookingIdRequest request, ServerCallContext context)
         {
-            var booking = bookings.FirstOrDefault(b => b.Id == request.Id);
-            if (booking == null)
+            Console.WriteLine($"[gRPC Server] Received GetBookingById request: ID={request.Id}");
+            try
             {
-                throw new RpcException(new Status(StatusCode.NotFound, $"Booking with ID={request.Id} not found"));
-            }
+                var booking = bookings.FirstOrDefault(b => b.Id == request.Id);
+                if (booking == null)
+                {
+                    Console.WriteLine($"[gRPC Server] Booking with ID={request.Id} not found");
+                    throw new RpcException(new Status(StatusCode.NotFound, $"Booking with ID={request.Id} not found"));
+                }
 
-            return Task.FromResult(booking);
+                return Task.FromResult(booking);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[gRPC Server] Error in GetBookingById: {ex.Message}");
+                throw;
+            }
         }
     }
 
@@ -65,7 +91,7 @@ namespace KoncStatusServer
 
             server.Start();
 
-            Console.WriteLine($"[Server] Listening on {host}:{port}");
+            Console.WriteLine($"[gRPC Server] Listening on {host}:{port}");
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
 
